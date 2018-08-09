@@ -1,0 +1,16 @@
+ML INRO --
+Linear Reg --
+Logistic Reg --
+Poission Reg --
+kNN--
+SVM--
+Decision Tree -- 
+PCA - Anamoly Detection -- Code Ready
+And/or Clustering with PCA--Code Ready
+Clustering - K Means and Hierarchical -- Code Ready  
+Reccomender System with Clustering -- Code Ready
+Neural Network ANN
+
+Case Study Raychem Dataset
+
+Assesment

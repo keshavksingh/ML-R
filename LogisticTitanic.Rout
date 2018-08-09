@@ -1,0 +1,128 @@
+
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> setwd("D:/Personal/Titanic")
+> df<-read.csv("train.csv",header = TRUE)
+> head(df)
+  PassengerId Survived Pclass
+1           1        0      3
+2           2        1      1
+3           3        1      3
+4           4        1      1
+5           5        0      3
+6           6        0      3
+                                                 Name    Sex Age SibSp Parch
+1                             Braund, Mr. Owen Harris   male  22     1     0
+2 Cumings, Mrs. John Bradley (Florence Briggs Thayer) female  38     1     0
+3                              Heikkinen, Miss. Laina female  26     0     0
+4        Futrelle, Mrs. Jacques Heath (Lily May Peel) female  35     1     0
+5                            Allen, Mr. William Henry   male  35     0     0
+6                                    Moran, Mr. James   male  NA     0     0
+            Ticket    Fare Cabin Embarked
+1        A/5 21171  7.2500              S
+2         PC 17599 71.2833   C85        C
+3 STON/O2. 3101282  7.9250              S
+4           113803 53.1000  C123        S
+5           373450  8.0500              S
+6           330877  8.4583              Q
+> dftr<-subset(df,select = -c(Ticket,Cabin,PassengerId,Name))
+> head(dftr)
+  Survived Pclass    Sex Age SibSp Parch    Fare Embarked
+1        0      3   male  22     1     0  7.2500        S
+2        1      1 female  38     1     0 71.2833        C
+3        1      3 female  26     0     0  7.9250        S
+4        1      1 female  35     1     0 53.1000        S
+5        0      3   male  35     0     0  8.0500        S
+6        0      3   male  NA     0     0  8.4583        Q
+> plot(dftr)
+> 
+> modellog<-glm(formula = Survived~factor(Pclass)+factor(Sex)+Age+factor(SibSp)
++               +factor(Parch)+Fare+factor(Embarked),family = binomial(link = "logit") ,data = dftr)
+> 
+> summary(modellog)
+
+Call:
+glm(formula = Survived ~ factor(Pclass) + factor(Sex) + Age + 
+    factor(SibSp) + factor(Parch) + Fare + factor(Embarked), 
+    family = binomial(link = "logit"), data = dftr)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.8578  -0.6461  -0.3791   0.6171   2.4375  
+
+Coefficients:
+                    Estimate Std. Error z value Pr(>|z|)    
+(Intercept)        1.852e+01  1.659e+03   0.011  0.99109    
+factor(Pclass)2   -1.207e+00  3.331e-01  -3.624  0.00029 ***
+factor(Pclass)3   -2.259e+00  3.489e-01  -6.474 9.53e-11 ***
+factor(Sex)male   -2.603e+00  2.241e-01 -11.615  < 2e-16 ***
+Age               -4.021e-02  8.801e-03  -4.569 4.90e-06 ***
+factor(SibSp)1    -5.238e-02  2.426e-01  -0.216  0.82903    
+factor(SibSp)2    -6.962e-01  5.801e-01  -1.200  0.23011    
+factor(SibSp)3    -2.045e+00  7.872e-01  -2.597  0.00939 ** 
+factor(SibSp)4    -1.821e+00  7.963e-01  -2.287  0.02221 *  
+factor(SibSp)5    -1.622e+01  9.639e+02  -0.017  0.98658    
+factor(Parch)1     3.234e-01  3.000e-01   1.078  0.28110    
+factor(Parch)2     2.237e-01  4.158e-01   0.538  0.59050    
+factor(Parch)3     4.717e-01  1.047e+00   0.450  0.65242    
+factor(Parch)4    -1.585e+01  1.053e+03  -0.015  0.98799    
+factor(Parch)5    -9.741e-01  1.179e+00  -0.826  0.40878    
+factor(Parch)6    -1.634e+01  2.400e+03  -0.007  0.99457    
+Fare               1.551e-03  2.644e-03   0.587  0.55745    
+factor(Embarked)C -1.449e+01  1.659e+03  -0.009  0.99303    
+factor(Embarked)Q -1.514e+01  1.659e+03  -0.009  0.99272    
+factor(Embarked)S -1.478e+01  1.659e+03  -0.009  0.99289    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 964.52  on 713  degrees of freedom
+Residual deviance: 620.63  on 694  degrees of freedom
+  (177 observations deleted due to missingness)
+AIC: 660.63
+
+Number of Fisher Scoring iterations: 15
+
+> 
+> anova(modellog, test="Chisq")
+Analysis of Deviance Table
+
+Model: binomial, link: logit
+
+Response: Survived
+
+Terms added sequentially (first to last)
+
+
+                 Df Deviance Resid. Df Resid. Dev  Pr(>Chi)    
+NULL                               713     964.52              
+factor(Pclass)    2   94.706       711     869.81 < 2.2e-16 ***
+factor(Sex)       1  197.380       710     672.43 < 2.2e-16 ***
+Age               1   25.148       709     647.28 5.311e-07 ***
+factor(SibSp)     5   16.151       704     631.13  0.006427 ** 
+factor(Parch)     6    7.678       698     623.45  0.262674    
+Fare              1    0.622       697     622.83  0.430316    
+factor(Embarked)  3    2.200       694     620.63  0.531898    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+> 
+> proc.time()
+   user  system elapsed 
+   0.49    0.35    0.82 
